@@ -16,7 +16,11 @@ public enum ApiCodeEnum {
     SUCCESS(200, "成功"),
     FORBIDDEN(403, "无访问权限"),
     PARAMETER_ERROR(400, "请求参数错误"),
-    SYSTEM_ERROR(500, "系统错误");
+    SYSTEM_ERROR(500, "系统错误"),
+
+    //用户相关
+    ACCOUNT_DISABLED(1001,"账户被禁用")
+    ;
 
     private Integer code;
 

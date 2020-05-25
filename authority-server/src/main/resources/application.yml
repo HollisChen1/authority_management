@@ -1,7 +1,13 @@
 server:
   port: 9090
 spring:
+  application:
+    name: authority-management
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/authority-management?useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/authority_management?useSSL=false
     username: root
     password: 123456
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
