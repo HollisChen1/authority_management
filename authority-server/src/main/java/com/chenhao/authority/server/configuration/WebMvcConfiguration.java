@@ -1,4 +1,4 @@
-package com.chenhao.authority.core.configuration;
+package com.chenhao.authority.server.configuration;
 
 import com.chenhao.authority.core.interceptor.AuthenticationInterceptor;
 import org.apache.commons.lang.StringUtils;

@@ -7,6 +7,7 @@ import com.chenhao.authority.common.utils.JwtUtil;
 import com.chenhao.authority.core.service.UserService;
 import com.chenhao.authority.domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader(JWT_TOKEN_KEY_OF_HEADER);
+        if(StringUtils.isBlank(token)){
+            redirectToLogin(request, response, "当前未登录，请先登录");
+            return false;
+        }
         final JwtUtil.VerifyResponse verifyResponse = JwtUtil.verifyToken(token);
         if (!verifyResponse.getVerified()) {
             //校验不通过重定向到登录页面
