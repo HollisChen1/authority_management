@@ -1,5 +1,7 @@
 package com.chenhao.authority.domain;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ import java.util.Date;
  * application
  * @author 
  */
+@Data
 public class Application implements Serializable {
     private Integer id;
 
@@ -23,7 +26,7 @@ public class Application implements Serializable {
     /**
      * 应用描述
      */
-    private String desc;
+    private String description;
 
     /**
      * 创建时间
@@ -47,67 +50,4 @@ public class Application implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Integer getCreator() {
-        return creator;
-    }
-
-    public void setCreator(Integer creator) {
-        this.creator = creator;
-    }
-
-    public Integer getUpdator() {
-        return updator;
-    }
-
-    public void setUpdator(Integer updator) {
-        this.updator = updator;
-    }
 }

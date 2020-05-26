@@ -1,9 +1,11 @@
 package com.chenhao.authority.common.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ReflectUtil;
 import net.sf.cglib.beans.BeanCopier;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +43,10 @@ public class BeanCopyUtil {
      * @param <T>
      * @return
      */
-    public static <T> List<T> copyList(List<Object> sourceList, Class<T> tClass){
-        Assert.notNull(sourceList);
-        Assert.notEmpty(sourceList);
+    public static <T> List<T> copyList(List<?> sourceList, Class<T> tClass){
+        if(CollectionUtil.isEmpty(sourceList)){
+            return Collections.emptyList();
+        }
         return sourceList.stream()
                 .map(source -> BeanCopyUtil.copyObject(source, tClass))
                 .collect(Collectors.toList());

@@ -1,6 +1,8 @@
 package com.chenhao.authority.base;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -12,6 +14,8 @@ import lombok.Data;
  * @date: 2020/5/26 00:00
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CurrentUserInfo {
 
     private Integer userId;

@@ -48,6 +48,10 @@ public class ApiResult<T> {
         return fromEnum(ApiCodeEnum.SYSTEM_ERROR);
     }
 
+    public static ApiResult sysError(String msg) {
+        return fromEnum(ApiCodeEnum.SYSTEM_ERROR).setMsg(msg);
+    }
+
     public static ApiResult parameterError(String msg){
         return fromEnum(ApiCodeEnum.PARAMETER_ERROR).setMsg(msg);
     }

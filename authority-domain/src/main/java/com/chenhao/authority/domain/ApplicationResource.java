@@ -1,5 +1,7 @@
 package com.chenhao.authority.domain;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ import java.util.Date;
  * application_resouce
  * @author 
  */
+@Data
 public class ApplicationResource implements Serializable {
     private Integer id;
 
@@ -43,7 +46,7 @@ public class ApplicationResource implements Serializable {
     /**
      * 资源排序
      */
-    private Integer order;
+    private Integer sort;
 
     /**
      * 绑定组件ID
@@ -65,115 +68,4 @@ public class ApplicationResource implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(Integer applicationId) {
-        this.applicationId = applicationId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Byte getType() {
-        return type;
-    }
-
-    public void setType(Byte type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public Integer getOrder() {
-        return order;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
-
-    public String getBindComponent() {
-        return bindComponent;
-    }
-
-    public void setBindComponent(String bindComponent) {
-        this.bindComponent = bindComponent;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public Integer getCreator() {
-        return creator;
-    }
-
-    public void setCreator(Integer creator) {
-        this.creator = creator;
-    }
-
-    public Integer getUpdator() {
-        return updator;
-    }
-
-    public void setUpdator(Integer updator) {
-        this.updator = updator;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

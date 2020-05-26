@@ -1,10 +1,12 @@
 package com.chenhao.authority.core.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -46,9 +48,11 @@ public abstract class BaseService<T extends Serializable, Mapper extends BaseMap
         return getMapper().deleteById(id);
     }
 
-    public List<T> getByIds(List<Serializable> ids) {
+    public List<T> getByIds(List<? extends Serializable> ids) {
         Assert.notNull(ids, DATA_CANNOT_BE_NULL);
-        Assert.notEmpty(ids, DATA_CANNOT_BE_NULL);
+        if(CollectionUtil.isEmpty(ids)){
+            return Collections.emptyList();
+        }
         return getMapper().selectBatchIds(new HashSet<>(ids));
     }
 

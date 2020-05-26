@@ -8,17 +8,14 @@ import com.chenhao.authority.common.utils.BeanCopyUtil;
 import com.chenhao.authority.common.utils.JwtUtil;
 import com.chenhao.authority.common.utils.PasswordUtil;
 import com.chenhao.authority.core.service.*;
-import com.chenhao.authority.domain.Application;
-import com.chenhao.authority.domain.Role;
-import com.chenhao.authority.domain.RoleUser;
-import com.chenhao.authority.domain.User;
+import com.chenhao.authority.domain.*;
 import com.chenhao.authority.dto.LoginRequestDTO;
 import com.chenhao.authority.vo.LoginResponseVO;
+import com.chenhao.authority.vo.ResourceVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -52,6 +49,9 @@ public class IndexManager {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private ApplicationResourceService applicationResourceService;
+
 
     /**
      * 登录方法
@@ -77,8 +77,8 @@ public class IndexManager {
         }
         //颁发token
         LoginResponseVO responseVO = BeanCopyUtil.copyObject(user, LoginResponseVO.class);
-        responseVO.setToken(JwtUtil.createJwtToken(loginName));
-        log.info("登录名[{}]用户登录成功");
+        responseVO.setToken(JwtUtil.createJwtToken(loginName, user.getPasswordLastModify().getTime()));
+        log.info("登录名[{}]用户登录成功", loginName);
         return ApiResult.success(responseVO);
     }
 
@@ -87,7 +87,7 @@ public class IndexManager {
      * @param applicationCode 应用编号
      * @return
      */
-    public ApiResult getAccessResources(String applicationCode){
+    public ApiResult<List<ResourceVO>> getAccessResources(String applicationCode){
         //校验应用编号
         Application application = applicationService.getByAppCode(applicationCode);
         if(Objects.isNull(application)){
@@ -104,10 +104,13 @@ public class IndexManager {
                 .map(Role::getId)
                 .collect(Collectors.toList());
         //查询角色对应应用的资源列表
-        // TODO: 2020/5/26  
-
-        return ApiResult.success();
+        List<RoleResource> roleResourceList = roleResourceService.findByRoleIds(enableRoleIdList);
+        List<ApplicationResource> resourceList = applicationResourceService.findByApplicationAndIds(application.getId(), roleResourceList.stream().map(RoleResource::getResourceId).collect(Collectors.toList()));
+        //构建菜单树
+        return ApiResult.success(applicationResourceService.buildResourceTree(resourceList, 0));
     }
+
+
 
 
 }

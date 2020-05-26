@@ -8,11 +8,11 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * <p>
@@ -23,7 +23,7 @@ import java.util.Optional;
  * @author: chenhao
  * @date: 2020/5/25 22:37
  */
-
+@Slf4j
 public class JwtUtil {
 
     private static final Integer EXPIRE_TIME = 30;
@@ -38,13 +38,16 @@ public class JwtUtil {
 
     private static final String CLAIM_LOGIN_NAME = "loginName";
 
+    private static final String CLAIM_PASSWORD_LAST_MODIFY_TIME = "lastModify";
 
-    public static String createJwtToken(String loginName) {
+
+    public static String createJwtToken(String loginName, Long pwdLastModifyTime) {
         String token = JWT.create()
                 .withIssuer(ISSUER)    // 发布者
                 .withIssuedAt(new Date())   // 生成签名的时间
                 .withExpiresAt(DateTime.now().plusMinutes(EXPIRE_TIME).toDate())   // 生成签名的有效期 30分钟
-                .withClaim(CLAIM_LOGIN_NAME, loginName) // 插入数据
+                .withClaim(CLAIM_LOGIN_NAME, loginName) // 登录名
+                .withClaim(CLAIM_PASSWORD_LAST_MODIFY_TIME, pwdLastModifyTime) //密码最后修改时间
                 .sign(ALGORITHM);
         return token;
     }
@@ -55,13 +58,13 @@ public class JwtUtil {
                     .withIssuer(ISSUER)
                     .build();
             DecodedJWT decodedJWT = verifier.verify(token);
-            if (decodedJWT.getExpiresAt().after(DateTime.now().plusMinutes(REFRESH_TOKEN_TIME_LIMIT).toDate())) {
+            if (decodedJWT.getExpiresAt().before(DateTime.now().plusMinutes(REFRESH_TOKEN_TIME_LIMIT).toDate())) {
                 //token快到期时刷新token
                 return VerifyResponse.refreshToken(decodedJWT, token);
             }
-            return VerifyResponse.verifySuccess();
+            return VerifyResponse.verifySuccess(decodedJWT.getClaim(CLAIM_LOGIN_NAME).asString());
         } catch (JWTVerificationException e) {
-            e.printStackTrace();
+            log.error("JWT验证失败：{}", e.getMessage(), e);
             return VerifyResponse.verifyFailure(e.getLocalizedMessage());
         }
 
@@ -75,33 +78,40 @@ public class JwtUtil {
         /**
          * 是否验证通过
          */
-        private Boolean verified;
+        private Boolean verified = false;
 
         private String verifyMsg;
+
+        private String loginName;
 
         /**
          * 是否刷新token
          */
-        private Boolean refreshToken;
+        private Boolean refreshToken = false;
 
         private String oldToken;
 
         private String newToken;
 
-        public static VerifyResponse verifySuccess() {
-            return new VerifyResponse().setVerified(true);
+
+        public static VerifyResponse verifySuccess(String loginName) {
+            return new VerifyResponse().setVerified(true)
+                    .setLoginName(loginName);
         }
 
         public static VerifyResponse refreshToken(DecodedJWT decodedJWT, String oldToken) {
             Claim loginNameClaim = decodedJWT.getClaim(CLAIM_LOGIN_NAME);
-            if (Objects.isNull(loginNameClaim)) {
+            Claim pwdLastModify = decodedJWT.getClaim(CLAIM_PASSWORD_LAST_MODIFY_TIME);
+            if (Objects.isNull(loginNameClaim) || Objects.isNull(pwdLastModify)) {
+                log.warn("loginNameClaim = {} , pwdLastModify = {}", loginNameClaim, pwdLastModify);
                 return verifyFailure("登录信息有误，请重新登录");
             }
             return new VerifyResponse()
                     .setVerified(true)
                     .setRefreshToken(true)
-                    .setNewToken(createJwtToken(loginNameClaim.asString()))
-                    .setOldToken(oldToken);
+                    .setNewToken(createJwtToken(loginNameClaim.asString(), pwdLastModify.asLong()))
+                    .setOldToken(oldToken)
+                    .setLoginName(loginNameClaim.asString());
         }
 
         public static VerifyResponse verifyFailure(String verifyMsg) {
