@@ -8,7 +8,7 @@ import com.chenhao.authority.common.response.ApiResult;
 import com.chenhao.authority.common.utils.BeanCopyUtil;
 import com.chenhao.authority.common.utils.JwtUtil;
 import com.chenhao.authority.common.utils.PasswordUtil;
-import com.chenhao.authority.core.security.GrantedAuthorityImpl;
+import com.chenhao.authority.core.security.AppGrantedAuthority;
 import com.chenhao.authority.core.service.*;
 import com.chenhao.authority.domain.*;
 import com.chenhao.authority.dto.LoginRequestDTO;
@@ -17,12 +17,10 @@ import com.chenhao.authority.vo.ResourceVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -130,7 +128,7 @@ public class SecurityManager {
             return Collections.emptyList();
         }
         return roles.stream()
-                .map(role -> new GrantedAuthorityImpl()
+                .map(role -> new AppGrantedAuthority()
                                 .setRoleId(role.getId())
                                 .setRoleName(role.getRoleName())
                 ).collect(Collectors.toList());

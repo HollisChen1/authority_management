@@ -1,7 +1,6 @@
 package com.chenhao.authority.server.configuration;
 
-import com.chenhao.authority.core.security.UrlAccessDecisionManager;
-import com.chenhao.authority.core.security.UserDetailServiceImpl;
+import com.chenhao.authority.core.security.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
@@ -26,29 +25,36 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
-    private UserDetailServiceImpl userDetailService;
+    private AppUserDetailService userDetailService;
 
     @Autowired
-    private UrlAccessDecisionManager accessDecisionManager;
+    private AppAccessDecisionManager accessDecisionManager;
+
+    @Autowired
+    private AppAuthenticationFailureHandler authenticationFailureHandler;
+
+    @Autowired
+    private AppAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
+    private AppAccessDeniedHandler accessDeniedHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
                 .and()
                 .authorizeRequests()
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-
-                    @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        o.setAccessDecisionManager(accessDecisionManager);
-                        return o;
-                    }
-                })
+                .accessDecisionManager(accessDecisionManager)
                 .anyRequest()
                 .authenticated();
         http.formLogin()
                 .usernameParameter("userName")
-                .passwordParameter("password");
+                .passwordParameter("password")
+                .successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler);
     }
 
     @Override

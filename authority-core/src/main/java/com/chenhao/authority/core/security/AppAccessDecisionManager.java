@@ -1,9 +1,7 @@
 package com.chenhao.authority.core.security;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.chenhao.authority.core.mapper.custom.ResourceDao;
 import com.chenhao.authority.core.service.ApplicationResourceService;
-import com.chenhao.authority.domain.ApplicationResource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +30,7 @@ import java.util.stream.Stream;
  */
 @Component
 @Slf4j
-public class UrlAccessDecisionManager implements AccessDecisionManager {
+public class AppAccessDecisionManager implements AccessDecisionManager {
     @Value("${webMvc.excludePaths:/login,/logout}")
     private String excludePaths;
 
@@ -53,7 +51,7 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         if(CollectionUtil.isNotEmpty(authorities)){
             for (GrantedAuthority authority : authorities) {
-                GrantedAuthorityImpl grantedAuthority = (GrantedAuthorityImpl) authority;
+                AppGrantedAuthority grantedAuthority = (AppGrantedAuthority) authority;
                 if(applicationResourceService.isGrantedUrl(grantedAuthority.getRoleId(), uri)){
                     return;
                 }

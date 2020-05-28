@@ -56,6 +56,14 @@ public class ApiResult<T> {
         return fromEnum(ApiCodeEnum.PARAMETER_ERROR).setMsg(msg);
     }
 
+    public static ApiResult forbidden(){
+        return fromEnum(ApiCodeEnum.FORBIDDEN);
+    }
+
+    public static ApiResult forbidden(String msg){
+        return fromEnum(ApiCodeEnum.FORBIDDEN).setMsg(msg);
+    }
+
     public static ApiResult fromEnum(ApiCodeEnum apiCodeEnum) {
         Assert.checkNonNull(apiCodeEnum);
         return new ApiResult().setCode(apiCodeEnum.getCode()).setMsg(apiCodeEnum.getDescription());

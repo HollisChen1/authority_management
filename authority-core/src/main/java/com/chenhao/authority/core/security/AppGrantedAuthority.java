@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public class GrantedAuthorityImpl implements GrantedAuthority {
+public class AppGrantedAuthority implements GrantedAuthority {
 
     //角色ID
     private Integer roleId;
