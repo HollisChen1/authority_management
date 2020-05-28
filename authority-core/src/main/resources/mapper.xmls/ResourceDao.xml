@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenhao.authority.core.mapper.custom.ResourceDao">
+
+  <select id="isGrantedUrl" resultType="java.lang.Boolean">
+    SELECT
+	count( 1 )
+    FROM
+        role_resource rr
+        JOIN application_resource ar ON rr.resource_id = ar.id
+    where rr.role_id = #{roleId}
+    and ar.type = 2
+    and ar.url = #{url}
+  </select>
+
+</mapper>

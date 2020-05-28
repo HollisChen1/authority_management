@@ -1,7 +1,7 @@
 package com.chenhao.authority.core.controller;
 
 import com.chenhao.authority.common.response.ApiResult;
-import com.chenhao.authority.core.manager.IndexManager;
+import com.chenhao.authority.core.manager.SecurityManager;
 import com.chenhao.authority.dto.LoginRequestDTO;
 import com.chenhao.authority.vo.LoginResponseVO;
 import com.chenhao.authority.vo.ResourceVO;
@@ -23,14 +23,18 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@RequestMapping("/index")
 public class IndexController {
     @Autowired
-    private IndexManager indexManager;
+    private SecurityManager securityManager;
+
+    @RequestMapping("")
+    public ApiResult index(){
+        return ApiResult.success("Hello World!");
+    }
 
     @PostMapping("/login")
     public ApiResult<LoginResponseVO> doLogin(@Valid @RequestBody LoginRequestDTO requestDTO){
-        return indexManager.doLogin(requestDTO);
+        return securityManager.doLogin(requestDTO);
     }
 
     @PostMapping("/logout")
@@ -41,6 +45,6 @@ public class IndexController {
 
     @GetMapping("/resources")
     public ApiResult<List<ResourceVO>> getResourceList(@RequestParam String appCode){
-        return indexManager.getAccessResources(appCode);
+        return securityManager.getAccessResources(appCode);
     }
 }

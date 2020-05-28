@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author: chenhao
  * @date: 2020/5/26 21:55
  */
-@Configuration
+//@Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Value("${webMvc.excludePaths:/index/login,/index/logout}")
