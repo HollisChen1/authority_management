@@ -3,6 +3,10 @@ package com.chenhao.authority.core.service;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.chenhao.authority.base.PageRequest;
+import com.chenhao.authority.base.PageResponse;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -21,6 +25,8 @@ import java.util.List;
  */
 public abstract class BaseService<T extends Serializable, Mapper extends BaseMapper<T>> {
     private final static String DATA_CANNOT_BE_NULL = "参数不能为空";
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
 
     protected abstract Mapper getMapper();
 

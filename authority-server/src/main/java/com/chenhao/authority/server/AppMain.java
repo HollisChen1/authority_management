@@ -17,7 +17,6 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan({"com.chenhao.authority.core","com.chenhao.authority.server.configuration"})
-@MapperScan("com.chenhao.authority.core.mapper")
 @EnableDiscoveryClient
 public class AppMain {
 

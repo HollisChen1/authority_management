@@ -58,6 +58,7 @@ public class JwtUtil {
                     .withIssuer(ISSUER)
                     .build();
             DecodedJWT decodedJWT = verifier.verify(token);
+            //校验密码最后修改日期
             if (decodedJWT.getExpiresAt().before(DateTime.now().plusMinutes(REFRESH_TOKEN_TIME_LIMIT).toDate())) {
                 //token快到期时刷新token
                 return VerifyResponse.refreshToken(decodedJWT, token);
@@ -65,7 +66,7 @@ public class JwtUtil {
             return VerifyResponse.verifySuccess(decodedJWT.getClaim(CLAIM_LOGIN_NAME).asString());
         } catch (JWTVerificationException e) {
             log.error("JWT验证失败：{}", e.getMessage(), e);
-            return VerifyResponse.verifyFailure(e.getLocalizedMessage());
+            return VerifyResponse.verifyFailure(e.getMessage().startsWith("The Token has expired on") ? "当前登录状态已过期": e.getMessage());
         }
 
     }

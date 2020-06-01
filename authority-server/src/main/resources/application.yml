@@ -11,6 +11,12 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  mvc:
+    servlet:
+      load-on-startup: 0
+  servlet:
+    multipart:
+      max-file-size: 20MB
 logging:
   level:
     com.chenhao: debug

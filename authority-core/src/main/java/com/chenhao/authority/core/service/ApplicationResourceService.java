@@ -93,12 +93,12 @@ public class ApplicationResourceService extends BaseService<ApplicationResource,
 
     /**
      * 校验角色能否访问该url
-     * @param roleId
+     * @param userId
      * @param url
      * @return
      */
-    public boolean isGrantedUrl(Integer roleId, String url) {
-        return resourceDao.isGrantedUrl(roleId, url);
+    public boolean isGrantedUrl(String appCode ,Integer userId, String url) {
+        return resourceDao.isGrantedUrl(appCode,userId, url);
     }
 
 }

@@ -48,6 +48,8 @@ public class Application implements Serializable {
      */
     private Integer updator;
 
+    private boolean authorityCheck;
+
     private static final long serialVersionUID = 1L;
 
 }

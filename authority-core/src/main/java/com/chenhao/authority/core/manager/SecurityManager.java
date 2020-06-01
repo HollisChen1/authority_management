@@ -8,7 +8,6 @@ import com.chenhao.authority.common.response.ApiResult;
 import com.chenhao.authority.common.utils.BeanCopyUtil;
 import com.chenhao.authority.common.utils.JwtUtil;
 import com.chenhao.authority.common.utils.PasswordUtil;
-import com.chenhao.authority.core.security.AppGrantedAuthority;
 import com.chenhao.authority.core.service.*;
 import com.chenhao.authority.domain.*;
 import com.chenhao.authority.dto.LoginRequestDTO;
@@ -16,7 +15,6 @@ import com.chenhao.authority.vo.LoginResponseVO;
 import com.chenhao.authority.vo.ResourceVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -114,24 +112,6 @@ public class SecurityManager {
         List<ApplicationResource> resourceList = applicationResourceService.findByApplicationAndIds(application.getId(), roleResourceList.stream().map(RoleResource::getResourceId).collect(Collectors.toList()));
         //构建菜单树
         return ApiResult.success(applicationResourceService.buildResourceTree(resourceList, 0));
-    }
-
-    /**
-     * 获取用户的所有角色
-     *
-     * @param userId
-     * @return
-     */
-    public List<GrantedAuthority> getGrantedAuthorities(Integer userId) {
-        List<Role> roles = roleService.getEnabledByIds(roleUserService.findByUserId(userId).stream().map(RoleUser::getRoleId).collect(Collectors.toList()));
-        if (CollectionUtil.isEmpty(roles)) {
-            return Collections.emptyList();
-        }
-        return roles.stream()
-                .map(role -> new AppGrantedAuthority()
-                                .setRoleId(role.getId())
-                                .setRoleName(role.getRoleName())
-                ).collect(Collectors.toList());
     }
 
 

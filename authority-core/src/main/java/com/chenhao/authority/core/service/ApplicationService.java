@@ -26,10 +26,16 @@ public class ApplicationService extends BaseService<Application, ApplicationMapp
         return applicationMapper;
     }
 
-    public Application getByAppCode(String applicationCode){
+    public Application getByAppCode(String applicationCode) {
         Assert.notBlank(applicationCode);
         QueryWrapper<Application> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("code", applicationCode);
         return applicationMapper.selectOne(queryWrapper);
+    }
+
+    public boolean isCheckAuthority(String applicationCode) {
+        Application application = this.getByAppCode(applicationCode);
+        return application != null && application.isAuthorityCheck();
+
     }
 }
